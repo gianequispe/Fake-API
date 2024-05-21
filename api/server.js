@@ -8,7 +8,19 @@ const middlewares = jsonServer.defaults()
 server.use(middlewares)
 // Add this before server.use(router)
 
-server.use(cors());
+const domainList = ['http://localhost', 'http://localhost.com:3000', 'https://challenge-alura-alura-geek.vercel.app/']
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (domainList.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+}
+
+server.use(cors(corsOptions));
 
 server.use(jsonServer.rewriter({
     '/api/*': '/$1',
